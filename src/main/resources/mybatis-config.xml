@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--设置连接数据库的环境-->
+    <properties resource="jdbc.properties"/>
+
+    <!--
+        设置与数据库交互的环境
+        例如可以在此处配置二级缓存，配置查询延迟加载策略等等...
+        配置的目的是为了更加有效的查询表中的记录
+
+        在实际项目开发中，settings的设置基本没用
+        因为settings对于查询的优化，得到的效果不明显
+    -->
+<!--    <settings>-->
+<!--        <setting name="" value=""/>-->
+<!--    </settings>-->
+
+
+    <!--为mapper映射文件中的domain起别名-->
+    <typeAliases>
+        <!--
+            方式1：
+                为指定的类分别起别名，别名的命名由我们自己来决定
+                type: 要为哪个domain起别名 填写包.类名称.
+                alias: 别名的名字
+        -->
+<!--        <typeAlias type="com.zby.domain.Student" alias="stu"/>-->
+
+        <!--
+            方式2：
+                使用package标签批量起别名
+                别名是MyBatis默认为我们取好的，命名不是由我们自己决定，别名为类名(类名的字母不区分大小写)
+
+                name:指定一个包结构，表示在该包下，所有的domain自动起好了别名
+        -->
+        <package name="com.zby.domain"/>
+
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+
+        <!--单条注册-->
+<!--        <mapper resource="com/zby/dao/StudentDao.xml"/>-->
+
+        <!--批量注册-->
+        <!--name属性:指向dao层的包，表示在该dao包下，所有的mapper映射文件自动注册-->
+        <package name="com/zby/dao"/>
+
+    </mappers>
+
+</configuration>

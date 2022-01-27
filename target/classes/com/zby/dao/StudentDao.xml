@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+parameterType:参数类型,
+resultType:返回值类型
+-->
+
+<!--
+        注意:
+            在未来实际项目开发中.
+            所有的标签都必须要写id属性
+
+            <select>标签parameterType属性可以省略不写
+            resultType属性必须得写
+
+            对于<insert><update><delete>这3个标签
+            通常我们只写id属性，其他属性一概不写
+-->
+
+<mapper namespace="com.zby.dao.StudentDao">
+
+    <!--查询所有-->
+    <select id="getAll" resultType="com.zby.domain.Student">
+        select * from tb_student
+    </select>
+
+    <!--查询单条-->
+    <select id="getById" parameterType="java.lang.String" resultType="com.zby.domain.Student">
+        select * from tb_student where id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="save">
+        insert into tb_student(id,name,age) values(#{id},#{name},#{age})
+    </insert>
+
+    <!--查询姓名-->
+    <select id="getName" resultType="Student">
+        select * from tb_student where name = #{name}
+    </select>
+
+    <!--通过姓名和年龄查询-->
+    <select id="select1" resultType="Student">
+        select * from tb_student where name = #{name} and age = #{age}
+    </select>
+
+    <!--
+        模糊查询:
+        '%'空格#{}空格'%'
+        以上空格不能省略
+    -->
+    <select id="select2" resultType="Student">
+        select * from tb_student where name like '%' #{name} '%'
+    </select>
+
+    <select id="select3" resultType="Student">
+        select * from tb_student
+
+        <!--
+            where标签：
+                    当where标签在使用的时候，必须要搭配where标签对中的if标签来使用
+                    通过if标签的判断，如果有查询条件，则展现where关键字，如果没有查询条件则不展现where关键字
+                    where标签会自动的屏蔽掉第一个连接符and/or
+        -->
+        <where>
+
+            <if test=" name!=null and name!='' ">
+                and name like '%' #{name} '%'
+            </if>
+
+            <if test=" age!=null and age!='' ">
+                and age = #{age}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="select4" resultType="Student">
+        select * from tb_student
+        where id in
+
+        <!--
+            foreach标签:用来遍历传递来的数组参数
+            collection:标识传递参数的类型
+                        array:数组
+                        list:集合
+            item:每一次遍历出来的元素，在使用该元素的时候，需要套用在#{}中
+            open:拼接循环的开始符号
+            close:拼接循环的结束符号
+            separator:元素与元素之间的分隔符
+        -->
+
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </select>
+
+    <select id="select5" resultType="map">
+        select
+        s.name as sname,
+        c.name as cname
+        from tb_student s
+        join tb_classroom c
+        on s.classid = c.id
+
+    </select>
+
+    <select id="select6" resultType="com.zby.vo.StudentAndClassroomVo">
+        select
+            s.name as sname,
+            s.id as sid,
+            s.age as sage,
+            c.id as cid,
+            c.name as cname
+        from tb_student s
+                 join tb_classroom c
+                      on s.classid = c.id
+
+    </select>
+
+
+
+
+</mapper>
